@@ -96,11 +96,14 @@ export default function Home() {
               <span className="text-4xl text-violet-950 font-serif font-extrabold" > Question Me </span>
               </div>
             <div className="flex">
-              <div className=" border-2 border-violet-950 float-left flex flex-col  gap-3  bg-white rounded-xl h-[90vh] w-[50vw] mr-28 mt-3"  >
-                <span className="ml-4 mt-4  text-violet-950 font-serif">
+              <div className=" border-2 border-violet-950 float-left flex flex-col  gap-3  bg-white rounded-xl h-[90vh] w-[50vw] mr-24 mt-3"  >
+                <div className=" ml-2 mt-4" >
+
+                <span className=" text-violet-950 font-serif">
                   Write your passage below.
                 </span>
-                <div className=" ml-4 w-[45vw] h-[50vh] border-2 border-violet-950">
+                </div>
+                <div className=" ml-2 w-[45vw] h-[50vh] border-2 border-violet-950">
 
               <textarea
                 name="passage"
@@ -113,11 +116,14 @@ export default function Home() {
                 ></textarea>
                 </div>
                 <div className="mt-10">
-                <span className=" ml-4 text-violet-950 font-serif">
+                  <div className="ml-2">
+
+                <span className="text-violet-950 font-serif">
                   Write your questions below.
                 </span>
+                  </div>
 
-              <div className=" flex-row flex items-center  border-2 flex-1 border-violet-950 h-[7.5vh] w-[45vw] ml-4 mt-4" >
+              <div className=" flex-row flex items-center  border-2 flex-1 border-violet-950 h-[7.5vh] w-[45vw] ml-2 mt-4" >
 
               <textarea
                 onChange={handleQuestionAreaChange}
@@ -132,8 +138,8 @@ export default function Home() {
 
                 </div>
                 <div className=" bg-white rounded-xl h-[85vh] w-[20vw] mt-3 border-2 border-violet-950 ">
-              <h1 className=" ml-4 mt-4  text-violet-950 font-serif underline" >Answers</h1>
-              <div className="ml-4 mt-4" >
+              <h1 className=" ml-2 mt-4  text-violet-950 font-serif underline" >Answers</h1>
+              <div className="ml-2 mt-4" >
                 <ul>
                   {
                     answers?.length
