@@ -1,113 +1,171 @@
-import Image from 'next/image'
+"use client"; // This is a client component 👈🏽
+
+import { useEffect, useState, ChangeEvent } from "react";
+
+import { IoSend } from "react-icons/io5";
+import "@tensorflow/tfjs-backend-webgl";
+import * as qna from "@tensorflow-models/qna";
+import { CircularProgress } from '@mui/material';
+import Swal from "sweetalert2";
 
 export default function Home() {
+  interface QuestionAndAnswer {
+    findAnswers(question: string, context: string): Promise<Answer[]>;
+  }
+  interface Answer {
+    text: string;
+    startIndex: number;
+    endIndex: number;
+    score: number;
+  }
+  const [passageRef, setPassageRef]= useState<string>("")
+  const [questionRef, setQuestionRef]= useState<string>("")
+  
+  const [answers, setAnswers] = useState<Answer[]>();
+  const [model, setModel] = useState<QuestionAndAnswer | null>(null);
+
+  // Load model
+
+  const loadModel = async () => {
+    const loadedModel = await qna.load();
+    setModel(loadedModel);
+   
+  };
+  const handleTextareaChange = (event:ChangeEvent<HTMLTextAreaElement>) => {
+    setPassageRef(event.target.value);
+  };
+  const handleQuestionAreaChange=(event:ChangeEvent<HTMLTextAreaElement>)=>{
+    setQuestionRef(event.target.value)
+  }
+
+  
+  const colorStyle = {
+    color: '#5C6AC4',
+  };
+  // Getting Answer
+  const getAnswers = async () => {
+    if ( model !== null) {
+      console.log("Question Submitted!");
+
+      if (
+        passageRef &&
+        questionRef
+      ) {
+        const passage = passageRef;
+        const question = questionRef;
+        console.log(question);
+        const modelAnswers = await model.findAnswers(question, passage);
+        setAnswers(modelAnswers);
+        console.log(modelAnswers);
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: "Please fill the passage area and Question first!",
+          icon: "warning",
+        });
+      }
+    }
+  };
+
+  // Flow
+  useEffect(() => {
+    loadModel();
+  }, []);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+    <div className="bg-gradient-to-br from-pink-200 to-purple-300 h-screen w-screen flex justify-center items-center">
+     
+                  
+       
+      <main >
+          {!model ? (
+            <div>
+              <div>
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+          <CircularProgress className="text-violet-950" style={colorStyle} size={180}/>
+              </div>
+              <div>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+            <span className="text-violet-950 font-serif font-extrabold text-2xl">Getting Started</span>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="flex align-middle justify-center text-xl font-sans">  
+              <span className="text-4xl text-violet-950 font-serif font-extrabold" > Question Me </span>
+              </div>
+            <div className="flex">
+              <div className=" border-2 border-violet-950 float-left flex flex-col  gap-3  bg-white rounded-xl h-[90vh] w-[50vw] mr-28 mt-3"  >
+                <span className="ml-4 mt-4  text-violet-950 font-serif">
+                  Write your passage below.
+                </span>
+                <div className=" ml-4 w-[45vw] h-[50vh] border-2 border-violet-950">
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
+              <textarea
+                name="passage"
+                onChange={handleTextareaChange}
+                id=""
+                cols={80}
+                rows={10}
+                className=" w-[43vw] h-[49vh] resize-none bg-transparent focus:outline-none ml-2 mr-2 text-[18px]"
+                
+                ></textarea>
+                </div>
+                <div className="mt-10">
+                <span className=" ml-4 text-violet-950 font-serif">
+                  Write your questions below.
+                </span>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+              <div className=" flex-row flex items-center  border-2 flex-1 border-violet-950 h-[7.5vh] w-[45vw] ml-4 mt-4" >
+
+              <textarea
+                onChange={handleQuestionAreaChange}
+                className="w-[43vw] h-[4vh] text-[18px] ml-2 mr-2  outline-none  resize-none bg-transparent focus:outline-none "
+                > 
+               
+                </textarea>
+                <IoSend className="ml-2 mr-1 w-6 h-6 cursor-pointer active:cursor-pointer" onClick={getAnswers}/>
+
+                </div>
+                </div>
+
+                </div>
+                <div className=" bg-white rounded-xl h-[85vh] w-[20vw] mt-3 border-2 border-violet-950 ">
+              <h1 className=" ml-4 mt-4  text-violet-950 font-serif underline" >Answers</h1>
+              <div className="ml-4 mt-4" >
+                <ul>
+                  {
+                    answers?.length
+                    ? answers.map((answer, index) => {
+                      return (
+                        <li
+                        className="text-violet-950 font-serif "
+                        key={index + "answer"}
+                        >
+                               
+                                <b>{". "+answer.text}</b>
+                                <div >
+                                  <p>Score:</p>
+                                  <p >
+                                    {answer.score.toFixed(2)}
+                                  </p>
+                                </div>
+                              </li>
+                            );
+                          })
+                          : null
+                          
+                          }
+                  </ul>
+                          </div>
+                </div>
+              </div>
+              </div>
+            )}
+          
+        </main>
+    </div>
+    
+  );
 }
