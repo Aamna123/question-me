@@ -97,10 +97,10 @@ export default function Home() {
               </div>
             <div className="flex">
               <div className=" border-2 border-violet-950 float-left flex flex-col  gap-3  bg-white rounded-xl h-[90vh] w-[50vw] mr-28 mt-3"  >
-                <span className="ml-4 mt-4 text-violet-950 font-serif">
+                <span className="ml-4 mt-4  text-violet-950 font-serif">
                   Write your passage below.
                 </span>
-                <div className=" ml-4 mr-4 w-[45vw] h-[50vh] border-2 border-violet-950">
+                <div className=" ml-4 w-[45vw] h-[50vh] border-2 border-violet-950">
 
               <textarea
                 name="passage"
@@ -117,7 +117,7 @@ export default function Home() {
                   Write your questions below.
                 </span>
 
-              <div className=" flex-row flex items-center  border-2 flex-1 border-violet-950 h-[7.5vh] w-[45vw] ml-4 mt-4 mr-4" >
+              <div className=" flex-row flex items-center  border-2 flex-1 border-violet-950 h-[7.5vh] w-[45vw] ml-4 mt-4" >
 
               <textarea
                 onChange={handleQuestionAreaChange}
@@ -131,7 +131,7 @@ export default function Home() {
                 </div>
 
                 </div>
-                <div className=" bg-white rounded-xl h-[85vh] w-[20vw] mt-3 mr-2 border-2 border-violet-950 ">
+                <div className=" bg-white rounded-xl h-[85vh] w-[20vw] mt-3 border-2 border-violet-950 ">
               <h1 className=" ml-4 mt-4  text-violet-950 font-serif underline" >Answers</h1>
               <div className="ml-4 mt-4" >
                 <ul>
